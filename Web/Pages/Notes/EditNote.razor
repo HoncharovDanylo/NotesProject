@@ -1,8 +1,5 @@
 ﻿@page "/edit/{id:int}"
 @inject IUnitOfWork unitOfWork
-@using Core.Entities
-@using Core.Interfaces.Data
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
 <h3>EditNote</h3>
 <h1>Edit</h1>
 
@@ -10,7 +7,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm  Model=@Note>
+        <EditForm  Model=@Note OnValidSubmit="Update">
            <DataAnnotationsValidator/>
             <div class="form-group">
                 <label for="Title" class="control-label">Title</label>

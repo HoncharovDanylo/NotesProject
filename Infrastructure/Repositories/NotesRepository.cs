@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -36,7 +37,7 @@ public class NotesRepository : INotesRepository
 
     public void Update(Note note)
     {
-        _dbContext.Notes.Update(note);
+        _dbContext.Entry(note).State = EntityState.Modified;
         _dbContext.SaveChanges();
     }
 }
