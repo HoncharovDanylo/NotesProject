@@ -1,8 +1,4 @@
 ﻿@page "/create"
-@using Microsoft.EntityFrameworkCore
-@using Core.Entities
-@using Core.Interfaces.Data
-@using Microsoft.AspNetCore.Identity
 @inject IUnitOfWork uniOfWork
 @inject NavigationManager NavManager
 <h1>Create</h1>
@@ -35,7 +31,7 @@
 </div>
 
 @code {
-    Note Note = new Note();
+    public Note Note = new Note();
 
     public void Create()
     {

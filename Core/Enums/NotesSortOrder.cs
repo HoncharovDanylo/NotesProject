@@ -2,8 +2,9 @@
 
 public enum NotesSortOrder
 {
+    CreationTimeDesc,
+    CreationTimeAsc,
     TitleAsc,
     TitleDesc,
-    CreationTimeAsc,
-    CreationTimeDesc
+    
 }

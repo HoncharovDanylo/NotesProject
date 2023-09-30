@@ -1,8 +1,5 @@
 ﻿@page "/"
-@using Core.Interfaces.Data
-@using Core.Entities
 @using Core.Enums
-@using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata
 @inject IUnitOfWork unitOfWork
 
 <PageTitle>Notes</PageTitle>
@@ -45,11 +42,6 @@
 //   IEnumerable<Note> notes = new List<Note>();
     public string? SearchValue { get; set; }
     public NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
-    protected override void OnInitialized()
-    {
-        GetNotes();
-        base.OnInitialized();
-    }
 
     public IEnumerable<Note> GetNotes(NotesSortOrder sortOrder = NotesSortOrder.CreationTimeDesc,string? name = "")
     {
