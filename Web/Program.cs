@@ -1,3 +1,5 @@
+using Core.Interfaces.Data;
+using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -14,7 +16,14 @@ builder.Services.AddSingleton<WeatherForecastService>();
 //Add database context
 builder.Services.AddDbContext<DataBaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Add UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

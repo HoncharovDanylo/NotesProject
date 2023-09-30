@@ -1,0 +1,49 @@
+﻿@page "/create"
+@using Microsoft.EntityFrameworkCore
+@using Core.Entities
+@using Core.Interfaces.Data
+@using Microsoft.AspNetCore.Identity
+@inject IUnitOfWork uniOfWork
+@inject NavigationManager NavManager
+<h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model=@Note OnValidSubmit="Create">
+           <DataAnnotationsValidator/>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="Title" class="control-label">Title</label>
+                <input @bind=Note.Title class="form-control" name="Title" id="Title"/>
+                <ValidationMessage For=@(() => Note.Title)/>
+            </div>
+            <div class="form-group">
+                <label for="Description" class="control-label">Description</label>
+                <textarea @bind="Note.Description"  class="form-control" id="Description" > </textarea>
+                <ValidationMessage For=@(() => Note.Description)/>
+            </div>
+            <div class="form-group"><br/>
+                <button type="submit" value="Create" class="btn btn-primary">Create</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/">Back to List</a>
+</div>
+
+@code {
+    Note Note = new Note();
+
+    public void Create()
+    {
+        Note.CreationTime = DateTime.Now;
+        uniOfWork.NotesRepository.Create(Note);
+        NavManager.NavigateTo("/");
+    }
+    
+
+}
