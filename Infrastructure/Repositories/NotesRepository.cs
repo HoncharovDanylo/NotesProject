@@ -28,4 +28,15 @@ public class NotesRepository : INotesRepository
         _dbContext.Notes.Add(note);
         _dbContext.SaveChanges();
     }
+
+    public Note GetNoteById(int id)
+    {
+        return _dbContext.Notes.FirstOrDefault(note => note.Id == id);
+    }
+
+    public void Update(Note note)
+    {
+        _dbContext.Notes.Update(note);
+        _dbContext.SaveChanges();
+    }
 }

@@ -1,0 +1,85 @@
+﻿@page "/"
+@using Core.Interfaces.Data
+@using Core.Entities
+@using Core.Enums
+@using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata
+@inject IUnitOfWork unitOfWork
+
+<PageTitle>Notes</PageTitle>
+<div class="index-head">
+    <ul>
+        <li><a href="/create"><button>Create note</button></a></li>
+        <li><input type="text" @bind="SearchValue" placeholder="Enter notes name"/></li>
+    </ul>
+    <InputSelect @bind-Value="@SortOrder">
+        @foreach (var value in Enum.GetValues<NotesSortOrder>())
+        {
+            <option value="@value">@value</option>
+        }
+    </InputSelect>
+</div>
+<h1>Products list</h1>
+<table class="table">
+    <tbody>
+        @foreach (var item in GetNotes(SortOrder,SearchValue))
+        {
+            <tr>
+                <td>
+                    @item.Title
+                </td>
+                <td>
+                    @item.CreationTime
+                </td>
+                <td>
+                    <a href="/view/@item.Id"><button>View Note</button></a>
+                </td>
+                <td>
+                    <a href="/edit/@item.Id"><button>Edit Note</button></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code{
+    
+//   IEnumerable<Note> notes = new List<Note>();
+    public string? SearchValue { get; set; }
+    public NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
+    protected override void OnInitialized()
+    {
+        GetNotes();
+        base.OnInitialized();
+    }
+
+    public IEnumerable<Note> GetNotes(NotesSortOrder sortOrder = NotesSortOrder.CreationTimeDesc,string? name = "")
+    {
+        IEnumerable<Note> notes;
+        if (string.IsNullOrWhiteSpace(name))
+            notes =  unitOfWork.NotesRepository.GetAllNotes();
+        else
+            notes = unitOfWork.NotesRepository.GetNotesByNameOrDescription(name);
+        return OrderNotes(notes);
+    }
+
+    public IEnumerable<Note> OrderNotes(IEnumerable<Note> notes)
+    {
+        switch (SortOrder)
+        {
+            case NotesSortOrder.TitleAsc:
+                notes = notes.OrderBy(note => note.Title);
+                break;
+            case NotesSortOrder.TitleDesc:
+                notes = notes.OrderByDescending(note => note.Title);
+                break;
+            case NotesSortOrder.CreationTimeAsc:
+                notes = notes.OrderBy(note => note.CreationTime);
+                break;
+            case NotesSortOrder.CreationTimeDesc:
+                notes = notes.OrderByDescending(note => note.CreationTime);
+                break;
+        }
+        return notes;
+    }
+
+
+}

@@ -1,0 +1,52 @@
+﻿@using Core.Entities
+@using Core.Interfaces.Data
+@page "/view/{id:int}"
+@inject IUnitOfWork unitOfWork
+<h3>ViewNote</h3>
+<h3>EditNote</h3>
+<h1>Edit</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm  Model=@Note>
+           <DataAnnotationsValidator/>
+            <div class="form-group">
+                <label for="Title" class="control-label">Title</label>
+                <input @bind=Note.Title class="form-control" name="Title" id="Title" readonly/>
+                <ValidationMessage For=@(() => Note.Title)/>
+            </div>
+           <div class="form-group">
+               <label for="Description" class="control-label">Description</label>
+               <textarea @bind="Note.Description"  class="form-control" id="Description"  readonly> </textarea>
+               <ValidationMessage For=@(() => Note.Description)/>
+           </div>
+           <div class="form-group">
+               <label for="Description" class="control-label">Note created</label>
+               <p>@Note.CreationTime.ToString("dd-MMMM-yyyy HH:mm")</p>
+               <ValidationMessage For=@(() => Note.Description)/>
+           </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/">Back to List</a>
+</div>
+@code {
+    
+    [Parameter]
+    public int id { get; set; }
+
+    public Note Note { get; set; }
+    protected override void OnInitialized()
+    {
+        Note = unitOfWork.NotesRepository.GetNoteById(id);
+    }
+
+}
