@@ -1,6 +1,5 @@
 ﻿@page "/view/{id:int}"
-@inject IUnitOfWork unitOfWork
-
+@inherits ViewNoteBase
 <h3>ViewNote</h3>
 <h3>EditNote</h3>
 <h1>Edit</h1>
@@ -37,15 +36,3 @@
 <div>
     <a href="/">Back to List</a>
 </div>
-@code {
-    
-    [Parameter]
-    public int id { get; set; }
-
-    public Note Note { get; set; }
-    protected override void OnInitialized()
-    {
-        Note = unitOfWork.NotesRepository.GetNoteById(id);
-    }
-
-}

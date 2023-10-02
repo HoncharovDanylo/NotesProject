@@ -1,6 +1,5 @@
 ﻿@page "/create"
-@inject IUnitOfWork uniOfWork
-@inject NavigationManager NavManager
+@inherits CreateNoteBase
 <h1>Create</h1>
 
 <h4>Product</h4>
@@ -29,16 +28,3 @@
 <div>
     <a href="/">Back to List</a>
 </div>
-
-@code {
-    public Note Note = new Note();
-
-    public void Create()
-    {
-        Note.CreationTime = DateTime.Now;
-        uniOfWork.NotesRepository.Create(Note);
-        NavManager.NavigateTo("/");
-    }
-    
-
-}

@@ -4,10 +4,12 @@ namespace Core.Interfaces;
 
 public interface INotesRepository
 {
-    IEnumerable<Note> GetAllNotes();
-    IEnumerable<Note> GetNotesByNameOrDescription(string name);
-    void Create(Note note);
-    Note GetNoteById(int id);
+    Task<bool> IsNoteExist(int id);
+    Task<IEnumerable<Note>> GetAllNotes();
+    Task<IEnumerable<Note>> GetNotesByNameOrDescription(string name);
+    Task Create(Note note);
+    Task<Note> GetNoteById(int id);
 
-    void Update(Note note);
+    Task Update(Note note);
+    Task DeleteNote(int id);
 }

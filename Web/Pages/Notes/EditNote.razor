@@ -1,6 +1,5 @@
 ﻿@page "/edit/{id:int}"
-@using Microsoft.AspNetCore.Http.HttpResults
-@inject IUnitOfWork unitOfWork
+@inherits EditNoteBase
 @if (Note != null)
 {
     <h3>EditNote</h3>
@@ -33,20 +32,4 @@
 else
 {
     <NotFound></NotFound>
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    public Note Note;
-    protected override void OnInitialized()
-    {
-        Note = unitOfWork.NotesRepository.GetNoteById(Id);
-    }
-
-    public void Update()
-    {
-        unitOfWork.NotesRepository.Update(Note);
-    }
-
 }

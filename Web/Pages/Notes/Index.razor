@@ -1,14 +1,14 @@
 ﻿@page "/"
 @using Core.Enums
-@inject IUnitOfWork unitOfWork
+@inherits IndexBase;
 
 <PageTitle>Notes</PageTitle>
 <div class="index-head">
     <ul>
         <li><a href="/create"><button>Create note</button></a></li>
-        <li><input type="text" @bind="SearchValue" placeholder="Enter notes name"/></li>
+        <li><input id="name" type="text" @bind="SearchValue" placeholder="Enter notes name" @bind:after="GetNotes"/></li>
     </ul>
-    <InputSelect @bind-Value="@SortOrder">
+    <InputSelect   Value="SortOrder" ValueExpression="@(() => SortOrder)" ValueChanged="@((NotesSortOrder order) => OrderNotes())">
         @foreach (var value in Enum.GetValues<NotesSortOrder>())
         {
             <option value="@value">@value</option>
@@ -18,60 +18,30 @@
 <h1>Products list</h1>
 <table class="table">
     <tbody>
-        @foreach (var item in GetNotes(SortOrder,SearchValue))
-        {
-            <tr>
-                <td>
-                    @item.Title
-                </td>
-                <td>
-                    @item.CreationTime
-                </td>
-                <td>
-                    <a href="/view/@item.Id"><button>View Note</button></a>
-                </td>
-                <td>
-                    <a href="/edit/@item.Id"><button>Edit Note</button></a>
-                </td>
-            </tr>
-        }
+    @foreach (var item in Notes)
+    {
+        <tr>
+            <td>
+                @item.Title
+            </td>
+            <td>
+                @item.CreationTime
+            </td>
+            <td>
+                <a href="/view/@item.Id"><button>View Note</button></a>
+            </td>
+            <td>
+                <a href="/edit/@item.Id"><button>Edit Note</button></a>
+            </td>
+            <td>
+                <button @onclick="() => {ShowDeletionWindow = true; NoteToDelete = item.Id;}">Delete Note</button>
+            </td>
+        </tr>
+    }
+    
     </tbody>
 </table>
-@code{
-    
-//   IEnumerable<Note> notes = new List<Note>();
-    public string? SearchValue { get; set; }
-    public NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
-
-    public IEnumerable<Note> GetNotes(NotesSortOrder sortOrder = NotesSortOrder.CreationTimeDesc,string? name = "")
-    {
-        IEnumerable<Note> notes;
-        if (string.IsNullOrWhiteSpace(name))
-            notes =  unitOfWork.NotesRepository.GetAllNotes();
-        else
-            notes = unitOfWork.NotesRepository.GetNotesByNameOrDescription(name);
-        return OrderNotes(notes);
-    }
-
-    public IEnumerable<Note> OrderNotes(IEnumerable<Note> notes)
-    {
-        switch (SortOrder)
-        {
-            case NotesSortOrder.TitleAsc:
-                notes = notes.OrderBy(note => note.Title);
-                break;
-            case NotesSortOrder.TitleDesc:
-                notes = notes.OrderByDescending(note => note.Title);
-                break;
-            case NotesSortOrder.CreationTimeAsc:
-                notes = notes.OrderBy(note => note.CreationTime);
-                break;
-            case NotesSortOrder.CreationTimeDesc:
-                notes = notes.OrderByDescending(note => note.CreationTime);
-                break;
-        }
-        return notes;
-    }
-
-
+@if (ShowDeletionWindow)
+{
+    <DeleteConfiirmation NoteId="NoteToDelete"></DeleteConfiirmation>
 }

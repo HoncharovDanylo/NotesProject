@@ -14,30 +14,44 @@ public class NotesRepository : INotesRepository
         _dbContext = dataBaseContext;
     }
 
-    public IEnumerable<Note> GetAllNotes()
+    public async Task<bool> IsNoteExist(int id)
     {
-        return _dbContext.Notes.AsEnumerable();
+        return await _dbContext.Notes.AnyAsync(note => note.Id == id);
     }
 
-    public IEnumerable<Note> GetNotesByNameOrDescription(string name)
+    public async Task<IEnumerable<Note>> GetAllNotes()
     {
-        return _dbContext.Notes.Where(note => note.Title.ToLower().Contains(name.ToLower())|| note.Description.ToLower().Contains(name.ToLower()));
+        return  await _dbContext.Notes.AsNoTracking().ToListAsync();
     }
 
-    public void Create(Note note)
+    public async  Task<IEnumerable<Note>> GetNotesByNameOrDescription(string name)
+    {
+        return await _dbContext.Notes.AsNoTracking().Where(note => note.Title.ToLower().Contains(name.ToLower())|| note.Description.ToLower().Contains(name.ToLower())).ToListAsync();
+    }
+    public async Task<Note> GetNoteById(int id)
+    {
+        return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(note => note.Id == id);
+    }
+
+    public async Task Create(Note note)
     {
         _dbContext.Notes.Add(note);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Note GetNoteById(int id)
-    {
-        return _dbContext.Notes.FirstOrDefault(note => note.Id == id);
-    }
+    
 
-    public void Update(Note note)
+    public async Task Update(Note note)
     {
         _dbContext.Entry(note).State = EntityState.Modified;
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteNote(int id)
+    {
+         var Note = await _dbContext.Notes.FirstAsync(note => note.Id == id);
+        _dbContext.Notes.Remove(Note);
+        await _dbContext.SaveChangesAsync();
+
     }
 }
