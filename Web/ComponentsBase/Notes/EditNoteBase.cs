@@ -8,19 +8,19 @@ namespace Web.ComponentsBase;
 public class EditNoteBase : ComponentBase
 {
     [Inject]
-    private IUnitOfWork _unitOfWork { get; set; }
+    private IUnitOfWork? UnitOfWork { get; set; }
     [Parameter]
     public int Id { get; set; }
-    public Note Note;
+    public Note? Note;
     
     protected override async Task OnInitializedAsync()
     {
-        Note = await _unitOfWork.NotesRepository.GetNoteById(Id);
+        Note = await UnitOfWork.NotesRepository.GetNoteById(Id);
         await base.OnInitializedAsync();
     }
 
     public async Task Update()
     {
-        await _unitOfWork.NotesRepository.Update(Note);
+        await UnitOfWork.NotesRepository.Update(Note);
     }
 }

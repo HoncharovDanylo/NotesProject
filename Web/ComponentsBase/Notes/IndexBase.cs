@@ -8,17 +8,17 @@ namespace Web.ComponentsBase;
 public class IndexBase : ComponentBase
 {
     [Inject]
-    private IUnitOfWork _unitOfWork { get; set; }
+    private IUnitOfWork? UnitOfWork { get; set; }
     
-    public int NoteToDelete { get;set;}
-    public bool ShowDeletionWindow { get; set; }
-    public IEnumerable<Note> Notes = new List<Note>();
-    public string? SearchValue { get; set; }
+    protected int NoteToDelete { get;set;}
+    protected bool ShowDeletionWindow { get; set; }
+    protected IEnumerable<Note> Notes = new List<Note>();
+    protected string? SearchValue { get; set; }
     public NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
  
     protected override async Task OnInitializedAsync()
     {
-        Notes = await _unitOfWork.NotesRepository.GetAllNotes();
+        Notes = await UnitOfWork.NotesRepository.GetAllNotes();
         
         await base.OnInitializedAsync();
     }
@@ -26,9 +26,9 @@ public class IndexBase : ComponentBase
     public async Task GetNotes()
     {
         if (string.IsNullOrWhiteSpace(SearchValue))
-            Notes = await _unitOfWork.NotesRepository.GetAllNotes();
+            Notes = await UnitOfWork.NotesRepository.GetAllNotes();
         else
-            Notes = await _unitOfWork.NotesRepository.GetNotesByNameOrDescription(SearchValue);
+            Notes = await UnitOfWork.NotesRepository.GetNotesByNameOrDescription(SearchValue);
         OrderNotes();
     }
 

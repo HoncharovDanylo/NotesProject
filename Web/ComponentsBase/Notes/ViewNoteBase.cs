@@ -7,14 +7,14 @@ namespace Web.ComponentsBase;
 public class ViewNoteBase : ComponentBase
 {
     [Inject]
-    private IUnitOfWork _unitOfWork { get; set; }
+    private IUnitOfWork? UnitOfWork { get; set; }
     [Parameter]
-    public int id { get; set; }
+    public int Id { get; set; }
 
-    public Note Note { get; set; } = new Note();
+    protected Note Note { get; private set; } = new Note();
     protected override async Task OnInitializedAsync()
     {
-        Note = await _unitOfWork.NotesRepository.GetNoteById(id);
+        Note = await UnitOfWork.NotesRepository.GetNoteById(Id);
         await base.OnInitializedAsync();
     }
 }
