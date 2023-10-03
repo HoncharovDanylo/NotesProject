@@ -8,12 +8,12 @@
         <li><a href="/create"><button>Create note</button></a></li>
         <li><input id="name" type="text" @bind="SearchValue" placeholder="Enter notes name" @bind:after="GetNotes"/></li>
     </ul>
-    <InputSelect   Value="SortOrder" ValueExpression="@(() => SortOrder)" ValueChanged="@((NotesSortOrder order) => OrderNotes())">
+    <select @bind="SortOrder" @bind:after="OrderNotes">
         @foreach (var value in Enum.GetValues<NotesSortOrder>())
         {
             <option value="@value">@value</option>
         }
-    </InputSelect>
+    </select>
 </div>
 <h1>Products list</h1>
 <table class="table">

@@ -14,12 +14,13 @@ public class IndexBase : ComponentBase
     protected bool ShowDeletionWindow { get; set; }
     protected IEnumerable<Note> Notes = new List<Note>();
     protected string? SearchValue { get; set; }
-    public NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
- 
+    
+    protected NotesSortOrder SortOrder { get; set; } = NotesSortOrder.CreationTimeDesc;
+
     protected override async Task OnInitializedAsync()
     {
         Notes = await UnitOfWork.NotesRepository.GetAllNotes();
-        
+        OrderNotes();
         await base.OnInitializedAsync();
     }
 
