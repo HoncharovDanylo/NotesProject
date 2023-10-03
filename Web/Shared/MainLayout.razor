@@ -1,11 +1,28 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using Infrastructure.Services
+@inherits LayoutComponentBase
+@inject NotFoundListener NotFoundListener 
 <PageTitle>Web</PageTitle>
 
 <div class="page">
     <main>
-        <article class="content px-4">
+        @if (notFound)
+        {
+            <h1>Could not find the content you are looking for</h1>
+        }else
+        {
             @Body
-        </article>
+        }
     </main>
 </div>
+@code{
+    private bool notFound;
+
+    protected override void OnInitialized() => NotFoundListener.OnNotFound += SetNotFound;
+
+    void SetNotFound()
+    {
+        notFound = true;
+        StateHasChanged();
+    }
+
+}

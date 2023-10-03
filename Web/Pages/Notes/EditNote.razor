@@ -2,9 +2,9 @@
 @inherits EditNoteBase
 @if (Note != null)
 {
-    <h3>EditNote</h3>
+    <h3>Edit information about note</h3>
     <hr/>
-    <div class="row">
+    <div class="row center">
         <div class="col-md-4">
             <EditForm Model=@Note OnValidSubmit="Update">
                 <DataAnnotationsValidator/>
@@ -28,8 +28,4 @@
     <div>
         <a href="/">Back to List</a>
     </div>
-}
-else
-{
-    <NotFound></NotFound>
 }
